@@ -1,35 +1,34 @@
 import matplotlib.pyplot as plt
 import pandas as pd
-from calculating_average_price import calculate_and_display_average_price as calc_ave
+import data_download as dd
 
 
 def create_and_save_plot(data, ticker, period, filename=None):
-    plt.figure(figsize=(10, 6))
+	plt.figure(figsize=(10, 6))
 
-    if 'Date' not in data:
-        if pd.api.types.is_datetime64_any_dtype(data.index):
-            dates = data.index.to_numpy()
-            plt.plot(dates, data['Close'].values, label='Close Price')
-            plt.plot(dates, data['Moving_Average'].values, label='Moving Average')
-            plt.plot(dates, data['Average_period'].values, label='Average all period')
-        else:
-            print("Информация о дате отсутствует или не имеет распознаваемого формата.")
-            return
-    else:
-        if not pd.api.types.is_datetime64_any_dtype(data['Date']):
-            data['Date'] = pd.to_datetime(data['Date'])
-        plt.plot(data['Date'], data['Close'], label='Close Price')
-        plt.plot(data['Date'], data['Moving_Average'], label='Moving Average')
-        plt.plot(data['Date'], data['Average_period'].values, label='Average all period')
+	if 'Date' not in data:
+		if pd.api.types.is_datetime64_any_dtype(data.index):
+			dates = data.index.to_numpy()
+			plt.plot(dates, data['Close'].values, label='Close Price')
+			plt.plot(dates, data['Moving_Average'].values, label='Moving Average')
+		else:
+			print("Информация о дате отсутствует или не имеет распознаваемого формата.")
+			return
+	else:
+		if not pd.api.types.is_datetime64_any_dtype(data['Date']):
+			data['Date'] = pd.to_datetime(data['Date'])
+		plt.plot(data['Date'], data['Close'], label='Close Price')
+		plt.plot(data['Date'], data['Moving_Average'], label='Moving Average')
 
-    plt.title(f"{ticker} Цена акций с течением времени")
-    plt.xlabel("Дата")
-    plt.ylabel("Цена")
-    plt.legend()
+	plt.title(f"{ticker} Цена акций с течением времени")
+	plt.xlabel("Дата")
+	plt.ylabel("Цена")
+	plt.legend()
 
-    if filename is None:
-        filename = f"{ticker}_{period}_stock_price_chart_with_average.png"
+	if filename is None:
+		filename = f"{ticker}_{period}_stock_price_chart_with_average.png"
 
-    plt.savefig(filename)
-    print(f"График сохранен как {filename}")
-    print(f'The average value for the selected period (Среднее значение за выбранный период): {calc_ave(data)}')
+	plt.savefig(filename)
+	print(f"График сохранен как {filename}")
+	print(f'The average value for the selected period (Среднее значение за выбранный период): '
+		  f'{dd.calculate_and_display_average_price(data)}')
